@@ -23,11 +23,12 @@ func parsePattern(pattern string) []string {
 
 	parts := make([]string, 0)
 	for _, item := range vs {
-		if item != "" {
-			parts = append(parts, item)
-			if item[0] == '*' {
-				break
-			}
+		if item == "" {
+			continue
+		}
+		parts = append(parts, item)
+		if item[0] == '*' {
+			break
 		}
 	}
 	return parts
@@ -36,12 +37,12 @@ func parsePattern(pattern string) []string {
 func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	parts := parsePattern(pattern)
 
-	key := method + "-" + pattern
 	_, ok := r.roots[method]
 	if !ok {
 		r.roots[method] = &node{}
 	}
 	r.roots[method].insert(pattern, parts, 0)
+	key := method + "-" + pattern
 	r.handlers[key] = handler
 }
 
